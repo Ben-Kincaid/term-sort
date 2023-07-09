@@ -1,4 +1,4 @@
-use crate::app::{App, Sort};
+use crate::app::{App, View};
 use crossterm::event::{KeyCode, KeyEvent};
 use std::io;
 
@@ -13,10 +13,10 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
             }
             KeyCode::Enter => {
                 let selected = menu.list.state.selected().unwrap();
-                if let Some((_, sort)) = menu.list.items.get(selected) {
-                    match sort {
-                        Sort::Heap => {
-                            app.set_current_view(crate::app::View::HeapSort);
+                if let Some((_, view)) = menu.list.items.get(selected) {
+                    match view {
+                        View::Heap => {
+                            app.set_current_view(crate::app::View::Heap);
                         }
                         _ => (),
                     }

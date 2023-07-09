@@ -1,22 +1,22 @@
 use crate::handlers;
 use crossterm::event;
 use std::io;
-use tui::{
-    backend::Backend,
-    layout::{Alignment, Constraint, Direction, Layout},
-    style::{Color, Modifier, Style},
-    text::{Span, Spans},
-    widgets::{Block, Borders, List, ListItem, ListState, Paragraph, Wrap},
-    Frame,
-};
+use tui::widgets::ListState;
 
 pub enum View {
     Menu,
-    HeapSort,
+    Insertion,
+    Selection,
+    Bubble,
+    Shell,
+    Merge,
+    Heap,
+    Quick,
+    Quick3,
 }
-pub struct App<'a> {
+pub struct App {
     pub current_view: View,
-    pub states: AppStates<'a>,
+    pub states: AppStates,
 }
 
 pub struct StatefulList<T> {
@@ -62,45 +62,38 @@ impl<T> StatefulList<T> {
     }
 }
 
-pub enum Sort {
-    Insertion,
-    Selection,
-    Bubble,
-    Shell,
-    Merge,
-    Heap,
-    Quick,
-    Quick3,
+pub struct MenuState {
+    pub list: StatefulList<(&'static str, View)>,
 }
 
-pub struct MenuState<'a> {
-    pub list: StatefulList<(ListItem<'a>, Sort)>,
-}
-
-impl<'a> MenuState<'a> {
-    pub fn new() -> MenuState<'a> {
+impl<'a> MenuState {
+    pub fn new() -> MenuState {
         let list = StatefulList::default()
             .items(vec![
-                (ListItem::new("Insertion Sort"), Sort::Insertion),
-                (ListItem::new("Selection Sort"), Sort::Selection),
-                (ListItem::new("Bubble Sort"), Sort::Bubble),
-                (ListItem::new("Shell Sort"), Sort::Shell),
-                (ListItem::new("Merge Sort"), Sort::Merge),
-                (ListItem::new("Heap Sort"), Sort::Heap),
-                (ListItem::new("Quick Sort"), Sort::Quick),
-                (ListItem::new("Quick3 Sort"), Sort::Quick3),
+                ("Insertion Sort", View::Insertion),
+                ("Selection Sort", View::Selection),
+                ("Bubble Sort", View::Bubble),
+                ("Shell Sort", View::Shell),
+                ("Merge Sort", View::Merge),
+                ("Heap Sort", View::Heap),
+                ("Quick Sort", View::Quick),
+                ("Quick3 Sort", View::Quick3),
             ])
             .initial_select(0);
         MenuState { list }
     }
 }
 
-pub struct AppStates<'a> {
-    pub menu: Option<MenuState<'a>>,
+pub struct SortState {
+    pub title: &'static str,
 }
 
-impl<'a> AppStates<'a> {
-    pub fn new() -> AppStates<'a> {
+pub struct AppStates {
+    pub menu: Option<MenuState>,
+}
+
+impl AppStates {
+    pub fn new() -> AppStates {
         let menu_state = MenuState::new();
 
         AppStates {
@@ -109,8 +102,8 @@ impl<'a> AppStates<'a> {
     }
 }
 
-impl<'a> App<'a> {
-    pub fn new() -> App<'a> {
+impl App {
+    pub fn new() -> App {
         let states = AppStates::new();
 
         App {
@@ -130,12 +123,10 @@ impl<'a> App<'a> {
     pub fn handle_input(&mut self, key: event::KeyEvent) -> Result<(), io::Error> {
         match self.current_view {
             View::Menu => {
-                if let Some(ref mut menu) = self.states.menu.as_mut() {
-                    handlers::handle_menu_input(key, self)?;
-                }
-                Ok(())
+                handlers::handle_menu_input(key, self)?;
             }
-            _ => Ok(()),
+            _ => (),
         }
+        Ok(())
     }
 }
