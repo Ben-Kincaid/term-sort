@@ -56,6 +56,7 @@ fn ui() -> Result<(), io::Error> {
     // Draw loop
     loop {
         terminal.draw(|mut f| {
+            app.ui_width = f.size().width / 2;
             let current_view = app.current_view();
             match current_view {
                 View::Menu => ui::draw_menu(&mut f, &mut app),

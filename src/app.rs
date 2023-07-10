@@ -18,6 +18,7 @@ pub enum View {
 pub struct App {
     pub current_view: View,
     pub states: AppStates,
+    pub ui_width: u16,
 }
 
 pub struct StatefulList<T> {
@@ -114,6 +115,7 @@ impl App {
 
         App {
             current_view: View::Menu,
+            ui_width: 0,
             states,
         }
     }

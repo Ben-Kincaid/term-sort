@@ -19,7 +19,7 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
                         View::Bubble => {
                             let items = rand::thread_rng()
                                 .sample_iter::<f64, Standard>(Standard)
-                                .take(50)
+                                .take(app.ui_width as usize)
                                 .map(|x| x * 100.0)
                                 .collect();
 
