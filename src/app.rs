@@ -1,4 +1,5 @@
 use crate::handlers;
+use crate::sort;
 use crossterm::event;
 use std::io;
 use tui::widgets::ListState;
@@ -34,7 +35,7 @@ impl<T> Default for StatefulList<T> {
 }
 
 impl<T> StatefulList<T> {
-    pub fn items(mut self, items: Vec<T>) -> StatefulList<T> {
+    pub fn set_items(mut self, items: Vec<T>) -> StatefulList<T> {
         self.items = items;
         self
     }
@@ -69,7 +70,7 @@ pub struct MenuState {
 impl<'a> MenuState {
     pub fn new() -> MenuState {
         let list = StatefulList::default()
-            .items(vec![
+            .set_items(vec![
                 ("Insertion Sort", View::Insertion),
                 ("Selection Sort", View::Selection),
                 ("Bubble Sort", View::Bubble),
@@ -84,12 +85,16 @@ impl<'a> MenuState {
     }
 }
 
-pub struct SortState {
-    pub title: &'static str,
+pub struct SortState<T>
+where
+    T: sort::Sort,
+{
+    pub sort: T,
 }
 
 pub struct AppStates {
     pub menu: Option<MenuState>,
+    pub bubble: Option<SortState<sort::BubbleSort>>,
 }
 
 impl AppStates {
@@ -98,6 +103,7 @@ impl AppStates {
 
         AppStates {
             menu: Some(menu_state),
+            bubble: None,
         }
     }
 }

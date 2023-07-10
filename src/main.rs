@@ -5,6 +5,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::{
+    backtrace::Backtrace,
     io,
     panic::{self, PanicInfo},
 };
@@ -12,6 +13,7 @@ use tui::{backend::CrosstermBackend, Terminal};
 
 pub mod app;
 pub mod handlers;
+pub mod sort;
 pub mod ui;
 
 fn setup_terminal(stdout: &mut io::Stdout) -> Result<(), io::Error> {
@@ -28,8 +30,9 @@ fn cleanup_terminal() -> Result<(), io::Error> {
 
 fn handle_panic(info: &PanicInfo<'_>) -> Result<(), io::Error> {
     let msg = info.payload().downcast_ref::<&'static str>().unwrap();
-    println!("{}", *msg);
     cleanup_terminal()?;
+    println!("{}", *msg);
+    println!("{:?}", Backtrace::capture());
     Ok(())
 }
 
