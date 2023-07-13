@@ -2,7 +2,6 @@ use crate::sort::{Sort, SortPointer};
 
 pub struct BubbleSort {
     pub input: Vec<f64>,
-    pub step: u64,
     pub items: Vec<f64>,
     pub complete: bool,
     pub active: bool,
@@ -16,7 +15,6 @@ impl BubbleSort {
         let mut iterator_target = input.clone();
         BubbleSort {
             input,
-            step: 0,
             items,
             complete: false,
             active: false,
@@ -32,6 +30,7 @@ impl Sort for BubbleSort {
             self.items = data;
             self.pointer = pointer;
         } else {
+            self.complete = true;
             self.deactivate_sort();
         }
 

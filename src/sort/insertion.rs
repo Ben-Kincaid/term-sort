@@ -2,7 +2,6 @@ use crate::sort::{Sort, SortPointer};
 
 pub struct InsertionSort {
     pub input: Vec<f64>,
-    pub step: u64,
     pub items: Vec<f64>,
     pub complete: bool,
     pub active: bool,
@@ -16,7 +15,6 @@ impl InsertionSort {
         let mut iterator_target = input.clone();
         InsertionSort {
             input,
-            step: 0,
             items,
             complete: false,
             active: false,
@@ -32,6 +30,7 @@ impl Sort for InsertionSort {
             self.items = data;
             self.pointer = pointer;
         } else {
+            self.complete = true;
             self.deactivate_sort();
         }
 
@@ -75,7 +74,6 @@ pub mod tests {
     use super::*;
     use crate::sort::{generate_random_data, test_util};
 
-    // Verify all sort iterators end with sorted data
     #[test]
     fn test_final_sort() {
         let items = generate_random_data(100);
