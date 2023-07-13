@@ -5,10 +5,7 @@ use tui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Span, Spans},
-    widgets::{
-        canvas::{Canvas, Painter, Rectangle},
-        Axis, BarChart, Block, Borders, Chart, Dataset, List, ListItem, ListState, Paragraph, Wrap,
-    },
+    widgets::{BarChart, Block, Borders, List, ListItem, ListState, Paragraph, Wrap},
     Frame,
 };
 
