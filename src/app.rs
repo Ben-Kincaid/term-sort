@@ -78,11 +78,6 @@ impl<'a> MenuState {
                 ("Insertion Sort", View::Insertion),
                 ("Selection Sort", View::Selection),
                 ("Bubble Sort", View::Bubble),
-                ("Shell Sort", View::Shell),
-                ("Merge Sort", View::Merge),
-                ("Heap Sort", View::Heap),
-                ("Quick Sort", View::Quick),
-                ("Quick3 Sort", View::Quick3),
             ])
             .initial_select(0);
         MenuState { list }

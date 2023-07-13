@@ -1,6 +1,6 @@
 use crate::sort::{Sort, SortPointer};
 
-pub struct BubbleSort {
+pub struct SelectionSort {
     pub input: Vec<f64>,
     pub step: u64,
     pub items: Vec<f64>,
@@ -10,11 +10,11 @@ pub struct BubbleSort {
     pub pointer: SortPointer,
 }
 
-impl BubbleSort {
-    pub fn new(input: Vec<f64>) -> BubbleSort {
+impl SelectionSort {
+    pub fn new(input: Vec<f64>) -> SelectionSort {
         let items = input.clone();
         let mut iterator_target = input.clone();
-        BubbleSort {
+        SelectionSort {
             input,
             step: 0,
             items,
@@ -26,7 +26,7 @@ impl BubbleSort {
     }
 }
 
-impl Sort for BubbleSort {
+impl Sort for SelectionSort {
     fn step(&mut self) -> (&Vec<f64>, &SortPointer) {
         if let Some((data, pointer)) = self.iterator.next() {
             self.items = data;
@@ -53,18 +53,23 @@ impl Sort for BubbleSort {
         &self.pointer
     }
     fn get_name(&self) -> String {
-        "Bubble Sort".to_string()
+        "Selection Sort".to_string()
     }
 }
 
 pub fn create_iterator(input: &mut Vec<f64>) -> Box<dyn Iterator<Item = (Vec<f64>, SortPointer)>> {
     let mut result = vec![];
-    for i in 0..input.len() - 1 {
-        for j in 0..input.len() - 1 - i {
-            if input[j] > input[j + 1] {
-                input.swap(j, j + 1);
+    for i in 0..input.len() {
+        let mut min_index = i;
+        for j in i + 1..input.len() {
+            if input[j] < input[min_index] {
+                min_index = j;
             }
-            result.push((input.clone(), SortPointer(j, j + 1)));
+            result.push((input.clone(), SortPointer(i, j)));
+        }
+        if min_index != i {
+            input.swap(i, min_index);
+            result.push((input.clone(), SortPointer(i, min_index)));
         }
     }
     Box::new(result.into_iter())
@@ -75,6 +80,7 @@ pub mod tests {
     use super::*;
     use crate::sort::{generate_random_data, test_util};
 
+    // Verify all sort iterators end with sorted data
     #[test]
     fn test_final_sort() {
         let items = generate_random_data(100);

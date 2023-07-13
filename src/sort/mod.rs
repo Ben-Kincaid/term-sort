@@ -1,4 +1,6 @@
 pub mod bubble;
+pub mod insertion;
+pub mod selection;
 
 pub trait Sort {
     fn items(&self) -> &Vec<f64>;
@@ -11,3 +13,20 @@ pub trait Sort {
 }
 
 pub struct SortPointer(pub usize, pub usize);
+
+pub fn generate_random_data(size: usize) -> Vec<f64> {
+    use rand::{distributions::Standard, Rng};
+
+    rand::thread_rng()
+        .sample_iter::<f64, Standard>(Standard)
+        .take(size)
+        .map(|x| x * 100.0)
+        .collect()
+}
+
+#[cfg(test)]
+pub mod test_util {
+    pub fn is_sorted(data: &Vec<f64>) -> bool {
+        data.windows(2).all(|w| w[0] <= w[1])
+    }
+}

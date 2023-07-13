@@ -1,5 +1,7 @@
 use crate::app::{App, View};
 use crate::sort::bubble::BubbleSort;
+use crate::sort::insertion::InsertionSort;
+use crate::sort::selection::SelectionSort;
 use crossterm::event::{KeyCode, KeyEvent};
 use rand::{distributions::Standard, Rng};
 use std::io;
@@ -25,6 +27,8 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
                     let view = view.clone();
                     app.sort = match view {
                         View::Bubble => Some(Box::new(BubbleSort::new(items))),
+                        View::Insertion => Some(Box::new(InsertionSort::new(items))),
+                        View::Selection => Some(Box::new(SelectionSort::new(items))),
                         _ => None,
                     };
                     app.set_current_view(view);

@@ -79,7 +79,7 @@ pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut Box<d
     let block = Block::default()
         .borders(Borders::ALL)
         .style(Style::default().fg(Color::Gray));
-    let paragraph = Paragraph::new("Enter = sort")
+    let paragraph = Paragraph::new("Enter = sort, q = quit")
         .style(p_style)
         .block(block)
         .alignment(Alignment::Left);
