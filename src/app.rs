@@ -4,6 +4,7 @@ use crossterm::event;
 use std::io;
 use tui::widgets::ListState;
 
+#[derive(Clone, Copy)]
 pub enum View {
     Menu,
     Insertion,
@@ -15,10 +16,12 @@ pub enum View {
     Quick,
     Quick3,
 }
+
 pub struct App {
     pub current_view: View,
     pub states: AppStates,
     pub ui_width: u16,
+    pub sort: Option<Box<dyn sort::Sort>>,
 }
 
 pub struct StatefulList<T> {
@@ -95,7 +98,6 @@ where
 
 pub struct AppStates {
     pub menu: Option<MenuState>,
-    pub bubble: Option<SortState<sort::bubble::BubbleSort>>,
 }
 
 impl AppStates {
@@ -104,7 +106,6 @@ impl AppStates {
 
         AppStates {
             menu: Some(menu_state),
-            bubble: None,
         }
     }
 }
@@ -117,6 +118,7 @@ impl App {
             current_view: View::Menu,
             ui_width: 0,
             states,
+            sort: None,
         }
     }
 

@@ -7,7 +7,7 @@ pub trait Sort {
     fn activate_sort(&mut self);
     fn deactivate_sort(&mut self);
     fn get_pointer(&self) -> &SortPointer;
-    fn get_name() -> &'static str;
+    fn get_name(&self) -> String;
 }
 
 pub struct SortPointer(pub usize, pub usize);

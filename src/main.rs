@@ -4,7 +4,6 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use sort::Sort;
 use std::{
     backtrace::Backtrace,
     io,
@@ -92,16 +91,10 @@ fn ui() -> Result<(), io::Error> {
             }
         }
         if last_tick.elapsed() >= tick_rate {
-            match app.current_view {
-                View::Menu => {}
-                View::Bubble => {
-                    if let Some(bubble) = &mut app.states.bubble {
-                        if bubble.sort.is_active() {
-                            bubble.sort.step();
-                        }
-                    }
+            if let Some(sort) = &mut app.sort {
+                if sort.is_active() {
+                    sort.step();
                 }
-                _ => (),
             }
             last_tick = Instant::now();
         }

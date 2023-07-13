@@ -52,8 +52,8 @@ impl Sort for BubbleSort {
     fn get_pointer(&self) -> &SortPointer {
         &self.pointer
     }
-    fn get_name() -> &'static str {
-        "Bubble Sort"
+    fn get_name(&self) -> String {
+        "Bubble Sort".to_string()
     }
 }
 

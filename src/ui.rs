@@ -9,7 +9,7 @@ use tui::{
     Frame,
 };
 
-pub fn draw_header(f: &mut Frame<impl Backend>, chunk: Rect, title: &'static str) {
+pub fn draw_header(f: &mut Frame<impl Backend>, chunk: Rect, title: String) {
     let text = vec![Spans::from(vec![Span::raw(title)])];
 
     let block = Block::default();
@@ -57,14 +57,14 @@ pub fn draw_menu(f: &mut Frame<impl Backend>, app: &mut App) {
         )
         .split(f.size());
 
-    draw_header(f, chunks[0], "which-sort");
+    draw_header(f, chunks[0], "which-sort".to_string());
 
     let menu = app.states.menu.as_mut().unwrap();
 
     draw_menu_list(f, chunks[2], menu.list.items.as_ref(), &mut menu.list.state);
 }
 
-pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut impl sort::Sort) {
+pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut Box<dyn sort::Sort>) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(1)
@@ -112,24 +112,21 @@ pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut impl 
 }
 
 pub fn draw_single_sort(f: &mut Frame<impl Backend>, app: &mut App) {
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .margin(1)
-        .constraints(
-            [
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Percentage(100),
-            ]
-            .as_ref(),
-        )
-        .split(f.size());
+    if let Some(sort) = app.sort.as_mut() {
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .margin(1)
+            .constraints(
+                [
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Percentage(100),
+                ]
+                .as_ref(),
+            )
+            .split(f.size());
 
-    match app.current_view() {
-        View::Bubble => {
-            draw_header(f, chunks[0], "Bubble Sort");
-            draw_sort(f, chunks[2], &mut app.states.bubble.as_mut().unwrap().sort);
-        }
-        _ => (),
+        draw_header(f, chunks[0], sort.get_name());
+        draw_sort(f, chunks[2], sort);
     }
 }

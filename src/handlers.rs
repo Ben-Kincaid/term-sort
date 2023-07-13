@@ -1,4 +1,5 @@
 use crate::app::{App, View};
+use crate::sort::bubble::BubbleSort;
 use crossterm::event::{KeyCode, KeyEvent};
 use rand::{distributions::Standard, Rng};
 use std::io;
@@ -14,22 +15,19 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
             }
             KeyCode::Enter => {
                 let selected = menu.list.state.selected().unwrap();
-                if let Some((_, view)) = menu.list.items.get(selected) {
-                    match view {
-                        View::Bubble => {
-                            let items = rand::thread_rng()
-                                .sample_iter::<f64, Standard>(Standard)
-                                .take(app.ui_width as usize)
-                                .map(|x| x * 100.0)
-                                .collect();
+                let items: Vec<f64> = rand::thread_rng()
+                    .sample_iter::<f64, Standard>(Standard)
+                    .take(app.ui_width as usize)
+                    .map(|x| x * 100.0)
+                    .collect();
 
-                            app.states.bubble = Some(crate::app::SortState {
-                                sort: crate::sort::bubble::BubbleSort::new(items),
-                            });
-                            app.set_current_view(crate::app::View::Bubble);
-                        }
-                        _ => (),
-                    }
+                if let Some((_, view)) = menu.list.items.get(selected) {
+                    let view = view.clone();
+                    app.sort = match view {
+                        View::Bubble => Some(Box::new(BubbleSort::new(items))),
+                        _ => None,
+                    };
+                    app.set_current_view(view);
                 }
             }
             _ => (),
@@ -40,14 +38,11 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
 
 pub fn handle_sort_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> {
     match key.code {
-        KeyCode::Enter => match app.current_view() {
-            View::Bubble => {
-                if let Some(bubble) = &mut app.states.bubble {
-                    bubble.sort.active = !bubble.sort.active;
-                }
+        KeyCode::Enter => {
+            if let Some(sort) = app.sort.as_mut() {
+                sort.activate_sort();
             }
-            _ => (),
-        },
+        }
         _ => (),
     }
     Ok(())
