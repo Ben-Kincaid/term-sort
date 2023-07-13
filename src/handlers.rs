@@ -24,7 +24,7 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
                                 .collect();
 
                             app.states.bubble = Some(crate::app::SortState {
-                                sort: crate::sort::BubbleSort::new(items),
+                                sort: crate::sort::bubble::BubbleSort::new(items),
                             });
                             app.set_current_view(crate::app::View::Bubble);
                         }
@@ -34,6 +34,21 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
             }
             _ => (),
         }
+    }
+    Ok(())
+}
+
+pub fn handle_sort_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> {
+    match key.code {
+        KeyCode::Enter => match app.current_view() {
+            View::Bubble => {
+                if let Some(bubble) = &mut app.states.bubble {
+                    bubble.sort.active = !bubble.sort.active;
+                }
+            }
+            _ => (),
+        },
+        _ => (),
     }
     Ok(())
 }

@@ -68,19 +68,50 @@ pub fn draw_menu(f: &mut Frame<impl Backend>, app: &mut App) {
 }
 
 pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut impl sort::Sort) {
-    let data: Vec<(&'static str, u64)> =
-        sort_iter.items().iter().map(|x| ("", *x as u64)).collect();
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .margin(1)
+        .constraints([Constraint::Length(3), Constraint::Percentage(100)].as_ref())
+        .split(chunk);
+
+    let mut p_style = Style::default().fg(Color::Green);
+    if sort_iter.is_active() {
+        p_style = p_style.fg(Color::DarkGray);
+    }
+
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .style(Style::default().fg(Color::Gray));
+    let paragraph = Paragraph::new("Enter = sort")
+        .style(p_style)
+        .block(block)
+        .alignment(Alignment::Left);
+    f.render_widget(paragraph, chunks[0]);
+
+    let data: Vec<(&'static str, u64)> = sort_iter
+        .items()
+        .iter()
+        .enumerate()
+        .map(|(i, x)| {
+            let p = sort_iter.get_pointer();
+            if sort_iter.is_active() == false
+                || sort_iter.is_active() == true && (p.0 != i && p.1 != i)
+            {
+                ("", *x as u64)
+            } else {
+                ("⬆", *x as u64)
+            }
+        })
+        .collect();
 
     let chart = BarChart::default()
-        .block(Block::default().title("Data1").borders(Borders::ALL))
+        .block(Block::default().borders(Borders::ALL))
         .data(&data)
         .bar_width(1)
         .bar_style(Style::default().fg(Color::Yellow))
-        .value_style(Style::default().fg(Color::Black).bg(Color::Yellow));
+        .label_style(Style::default().fg(Color::Red));
 
-    sort_iter.step();
-
-    f.render_widget(chart, chunk);
+    f.render_widget(chart, chunks[1]);
 }
 
 pub fn draw_single_sort(f: &mut Frame<impl Backend>, app: &mut App) {

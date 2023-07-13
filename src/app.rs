@@ -95,7 +95,7 @@ where
 
 pub struct AppStates {
     pub menu: Option<MenuState>,
-    pub bubble: Option<SortState<sort::BubbleSort>>,
+    pub bubble: Option<SortState<sort::bubble::BubbleSort>>,
 }
 
 impl AppStates {
@@ -133,7 +133,7 @@ impl App {
             View::Menu => {
                 handlers::handle_menu_input(key, self)?;
             }
-            _ => (),
+            _ => handlers::handle_sort_input(key, self)?,
         }
         Ok(())
     }
