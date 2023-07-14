@@ -72,6 +72,7 @@ pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut Box<d
         .split(chunk);
 
     let mut p_style = Style::default().fg(Color::Green);
+
     if sort_iter.is_active() {
         p_style = p_style.fg(Color::DarkGray);
     }
@@ -91,8 +92,8 @@ pub fn draw_sort(f: &mut Frame<impl Backend>, chunk: Rect, sort_iter: &mut Box<d
         .enumerate()
         .map(|(i, x)| {
             let p = sort_iter.get_pointer();
-            if sort_iter.is_active() == false
-                || sort_iter.is_active() == true && (p.0 != i && p.1 != i)
+            if sort_iter.is_sorted() == true
+                || sort_iter.is_sorted() == false && (p.0 != i && p.1 != i)
             {
                 ("", *x as u64)
             } else {
