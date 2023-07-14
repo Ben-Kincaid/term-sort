@@ -42,6 +42,12 @@ impl Sort for BubbleSort {
     fn is_active(&self) -> bool {
         self.active
     }
+    fn is_sorted(&self) -> bool {
+        self.complete
+    }
+    fn toggle_sort(&mut self) {
+        self.active = !self.active;
+    }
     fn activate_sort(&mut self) {
         self.active = true;
     }

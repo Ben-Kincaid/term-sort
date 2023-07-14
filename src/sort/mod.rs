@@ -6,6 +6,8 @@ pub trait Sort {
     fn items(&self) -> &Vec<f64>;
     fn step(&mut self) -> (&Vec<f64>, &SortPointer);
     fn is_active(&self) -> bool;
+    fn is_sorted(&self) -> bool;
+    fn toggle_sort(&mut self);
     fn activate_sort(&mut self);
     fn deactivate_sort(&mut self);
     fn get_pointer(&self) -> &SortPointer;
