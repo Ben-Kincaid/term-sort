@@ -1,9 +1,8 @@
 use crate::app::{App, View};
-use crate::sort::bubble::BubbleSort;
-use crate::sort::insertion::InsertionSort;
-use crate::sort::selection::SelectionSort;
+use crate::sort::{
+    bubble::BubbleSort, generate_random_data, insertion::InsertionSort, selection::SelectionSort,
+};
 use crossterm::event::{KeyCode, KeyEvent};
-use rand::{distributions::Standard, Rng};
 use std::io;
 
 pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> {
@@ -17,11 +16,7 @@ pub fn handle_menu_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
             }
             KeyCode::Enter => {
                 let selected = menu.list.state.selected().unwrap();
-                let items: Vec<f64> = rand::thread_rng()
-                    .sample_iter::<f64, Standard>(Standard)
-                    .take(app.ui_width as usize)
-                    .map(|x| x * 100.0)
-                    .collect();
+                let items = generate_random_data(app.ui_width as usize);
 
                 if let Some((_, view)) = menu.list.items.get(selected) {
                     let view = view.clone();
@@ -44,7 +39,7 @@ pub fn handle_sort_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
     match key.code {
         KeyCode::Enter => {
             if let Some(sort) = app.sort.as_mut() {
-                sort.activate_sort();
+                sort.toggle_sort();
             }
         }
         _ => (),
