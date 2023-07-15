@@ -72,7 +72,7 @@ pub fn draw_menu(f: &mut Frame<impl Backend>, app: &mut App, chunk: Rect) {
         )
         .split(chunk);
 
-    draw_header(f, chunks[0], "which-sort".to_string(), false, false);
+    draw_header(f, chunks[0], "term-sort".to_string(), false, false);
 
     let menu = app.states.menu.as_mut().unwrap();
 

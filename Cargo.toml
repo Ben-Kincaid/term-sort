@@ -1,5 +1,5 @@
 [package]
-name = "rust-whichsort"
+name = "term-sort"
 version = "0.1.0"
 edition = "2021"
 description = "Visualize sorting algorithms in you terminal."
