@@ -1,5 +1,5 @@
 # term-sort
-Visualize sorting algorithms in you terminal.
+Visualize sorting algorithms in your terminal.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ## About
