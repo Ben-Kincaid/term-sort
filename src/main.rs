@@ -10,11 +10,7 @@ use std::{
     panic::{self, PanicInfo},
     time::{Duration, Instant},
 };
-use tui::{
-    backend::CrosstermBackend,
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
-    Terminal,
-};
+use tui::{backend::CrosstermBackend, layout::Rect, Terminal};
 
 pub mod app;
 pub mod handlers;

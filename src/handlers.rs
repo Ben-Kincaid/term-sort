@@ -1,7 +1,6 @@
 use crate::app::{App, View};
 use crate::sort::{
     bubble::BubbleSort, generate_random_data, insertion::InsertionSort, selection::SelectionSort,
-    Sort,
 };
 use crossterm::event::{KeyCode, KeyEvent};
 use std::io;
