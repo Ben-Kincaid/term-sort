@@ -1,6 +1,7 @@
 use crate::app::{App, View};
 use crate::sort::{
     bubble::BubbleSort, generate_random_data, insertion::InsertionSort, selection::SelectionSort,
+    Sort,
 };
 use crossterm::event::{KeyCode, KeyEvent};
 use std::io;
@@ -39,7 +40,13 @@ pub fn handle_sort_input(key: KeyEvent, app: &mut App) -> Result<(), io::Error> 
     match key.code {
         KeyCode::Enter => {
             if let Some(sort) = app.sort.as_mut() {
-                sort.toggle_sort();
+                if sort.is_sorted() {
+                    let items = generate_random_data(app.ui_width as usize);
+                    sort.reset(items);
+                    sort.activate_sort();
+                } else {
+                    sort.toggle_sort();
+                }
             }
         }
         _ => (),

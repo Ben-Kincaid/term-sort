@@ -3,6 +3,7 @@ use crate::sort::{Sort, SortPointer};
 pub struct BubbleSort {
     pub input: Vec<f64>,
     pub items: Vec<f64>,
+    pub step: usize,
     pub complete: bool,
     pub active: bool,
     pub iterator: Box<dyn Iterator<Item = (Vec<f64>, SortPointer)>>,
@@ -16,6 +17,7 @@ impl BubbleSort {
         BubbleSort {
             input,
             items,
+            step: 0,
             complete: false,
             active: false,
             iterator: create_iterator(&mut iterator_target),
@@ -29,6 +31,7 @@ impl Sort for BubbleSort {
         if let Some((data, pointer)) = self.iterator.next() {
             self.items = data;
             self.pointer = pointer;
+            self.step = self.step + 1;
         } else {
             self.complete = true;
             self.deactivate_sort();
@@ -59,6 +62,17 @@ impl Sort for BubbleSort {
     }
     fn get_name(&self) -> String {
         "Bubble Sort".to_string()
+    }
+    fn get_current_step(&self) -> usize {
+        self.step
+    }
+    fn reset(&mut self, items: Vec<f64>) {
+        self.input = items.clone();
+        self.items = items.clone();
+        self.iterator = create_iterator(&mut self.input);
+        self.step = 0;
+        self.complete = false;
+        self.active = false;
     }
 }
 

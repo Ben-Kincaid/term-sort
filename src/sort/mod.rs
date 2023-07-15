@@ -12,6 +12,8 @@ pub trait Sort {
     fn deactivate_sort(&mut self);
     fn get_pointer(&self) -> &SortPointer;
     fn get_name(&self) -> String;
+    fn get_current_step(&self) -> usize;
+    fn reset(&mut self, items: Vec<f64>);
 }
 
 pub struct SortPointer(pub usize, pub usize);

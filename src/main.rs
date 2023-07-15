@@ -10,7 +10,11 @@ use std::{
     panic::{self, PanicInfo},
     time::{Duration, Instant},
 };
-use tui::{backend::CrosstermBackend, Terminal};
+use tui::{
+    backend::CrosstermBackend,
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    Terminal,
+};
 
 pub mod app;
 pub mod handlers;
@@ -54,16 +58,27 @@ fn ui() -> Result<(), io::Error> {
     // Initialize the application
     let mut app = App::new();
     let mut last_tick = Instant::now();
-    let tick_rate = Duration::from_millis(20);
+    let tick_rate = Duration::from_millis(12);
 
     // Draw loop
     loop {
         terminal.draw(|mut f| {
-            app.ui_width = f.size().width / 2 - 3;
+            let size = f.size();
+            let w = std::cmp::min(size.width, 100);
+            let h = std::cmp::min(size.height, 30);
+            let viewport = Rect {
+                width: w,
+                height: h,
+                x: (size.width - w) / 2,
+                y: (size.height - h) / 2,
+                ..size
+            };
+
+            app.ui_width = viewport.width / 2 - 3;
             let current_view = app.current_view();
             match current_view {
-                View::Menu => ui::draw_menu(&mut f, &mut app),
-                _ => ui::draw_single_sort(&mut f, &mut app),
+                View::Menu => ui::draw_menu(&mut f, &mut app, viewport),
+                _ => ui::draw_single_sort(&mut f, &mut app, viewport),
             }
         })?;
 
